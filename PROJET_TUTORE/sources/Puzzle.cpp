@@ -297,17 +297,17 @@ void Puzzle::shufflePuzzle(){
     else{
         //1er temps, on tourne aléatoirement les pièces
         for(int i = 0; i < this->dimension * this->dimension; i++){
-            int random = rand() % 4;
+            int random = rand() % 3;
             for(int j = 0; j < random; j++){
                 this->board->at(i).rotateClockwise();
             }
         }
         //2ème temps on va permuter aléatoirement les pièces
-        for(int i = 0; i < this->dimension * this->dimension; i++){
-            int random = rand() % (this->dimension * this->dimension);
-            PuzzlePiece tmp = this->board->at(i);
-            this->board->at(i) = this->board->at(random);
-            this->board->at(random) = tmp;
+        for(int i = this->dimension * this->dimension; i > 0; i--){
+            int random = rand() % (i + 1);
+            PuzzlePiece tmp = this->board->at(i%this->dimension);
+            this->board->at(i%this->dimension) = this->board->at(random%this->dimension);
+            this->board->at(random%this->dimension) = tmp;
         }
     }
 }
