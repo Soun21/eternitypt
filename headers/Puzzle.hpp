@@ -23,4 +23,5 @@ class Puzzle{
         void importPuzzle(std::string filename);
         void exportPuzzle();
         void showPuzzle();
+        std::string whichCorner(PuzzlePiece &piece);
 };

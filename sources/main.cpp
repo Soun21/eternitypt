@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
     puzzle->generatePuzzle();
     puzzle->shufflePuzzle();
     puzzle->showPuzzle();
+    
 
     /*
     std::filesystem::path currentPath = std::filesystem::current_path();
