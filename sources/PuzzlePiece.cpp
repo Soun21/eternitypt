@@ -52,5 +52,54 @@ bool PuzzlePiece::upDown(PuzzlePiece piece1, PuzzlePiece piece2){
     return (piece1.getS() == piece2.getN());
 }
 
+bool PuzzlePiece::isCorner(){
+    return  (this->N == 0 && this->W == 0 && this->E != 0 && this->S != 0) ||
+            (this->N == 0 && this->E == 0 && this->S != 0 && this->W != 0) ||
+            (this->S == 0 && this->W == 0 && this->N != 0 && this->E != 0) ||
+            (this->S == 0 && this->E == 0 && this->N != 0 && this->W != 0);
+}
+
+bool PuzzlePiece::isCornerTopLeft(){
+    return  (this->N == 0 && this->W == 0 && this->S != 0 && this->E != 0);
+}
+
+bool PuzzlePiece::isCornerTopRight(){
+    return  (this->N == 0 && this->E == 0 && this->S != 0 && this->W != 0);
+}
+
+bool PuzzlePiece::isCornerBottomLeft(){
+    return  (this->S == 0 && this->W == 0 && this->N != 0 && this->E != 0);
+}
+
+bool PuzzlePiece::isCornerBottomRight(){
+    return  (this->S == 0 && this->E == 0 && this->N != 0 && this->W != 0);
+}
+
+bool PuzzlePiece::isBorderTop(){
+    return  (this->N == 0 && this->W != 0 && this->E != 0 && this->S != 0);
+}
+
+bool PuzzlePiece::isBorderBottom(){
+    return  (this->S == 0 && this->W != 0 && this->E != 0 && this->N != 0);
+}
+
+bool PuzzlePiece::isBorderLeft(){
+    return  (this->W == 0 && this->N != 0 && this->E != 0 && this->S != 0);
+}
+
+bool PuzzlePiece::isBorderRight(){
+    return  (this->E == 0 && this->W != 0 && this->N != 0 && this->S != 0);
+}
 
 
+
+bool PuzzlePiece::isBorder(){
+    return  (this->N == 0 && this->W != 0 && this->E != 0 && this->S != 0) ||
+            (this->S == 0 && this->W != 0 && this->E != 0 && this->N != 0) ||
+            (this->W == 0 && this->N != 0 && this->E != 0 && this->S != 0) ||
+            (this->E == 0 && this->W != 0 && this->N != 0 && this->S != 0);
+}
+
+bool PuzzlePiece::equals(PuzzlePiece &piece){
+    return (this->N == piece.getN() && this->W == piece.getW() && this->S == piece.getS() && this->E == piece.getE());
+}
