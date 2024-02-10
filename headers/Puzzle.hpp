@@ -10,12 +10,13 @@ class Puzzle{
         std::vector<PuzzlePiece> *board;
         int dimension;
         int nbMotifs;
-        int getDimension(){return dimension;};
         int getNbMotifs(){return nbMotifs;};
         void setDimension(int dimension){this->dimension = dimension;};
         void setNbMotifs(int nbMotifs){this->nbMotifs = nbMotifs;};
-        std::vector<PuzzlePiece>* getPuzzle(){return board;};
+        
     public:
+        int getDimension(){return dimension;};
+        std::vector<PuzzlePiece>* getPuzzle(){return board;};
         Puzzle(int dimension, int nbMotifs);
         void generatePuzzle();
         void puzzleFill(int i);

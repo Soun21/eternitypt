@@ -1,6 +1,6 @@
-#include "../headers/Puzzle.hpp"
 #include <iostream>
 #include <filesystem>
+#include "../headers/PuzzleDisplayer.hpp"
 
 using namespace std;
 
@@ -27,8 +27,9 @@ int main(int argc, char *argv[]) {
     int nbMotifs = atoi(argv[2]);
     Puzzle *puzzle = new Puzzle(dimension, nbMotifs);
     puzzle->generatePuzzle();
-    puzzle->shufflePuzzle();
-    puzzle->showPuzzle();
+    // puzzle->shufflePuzzle();
+    PuzzleDisplayer *puzzleDisplayer = new PuzzleDisplayer(puzzle);
+    puzzleDisplayer->display();
     
 
     /*

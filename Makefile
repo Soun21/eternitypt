@@ -7,8 +7,10 @@ SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
 HEADERS = $(wildcard $(INC_DIR)/*.hpp)
 OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=%.o)
 
+SFML_LIBS = -lsfml-graphics -lsfml-window -lsfml-system
+
 $(TARGET): $(OBJECTS)
-	$(CMP) -o $@ $^
+	$(CMP) -o $@ $^ $(SFML_LIBS)
 
 %.o: $(SRC_DIR)/%.cpp $(HEADERS)
 	$(CMP) $(FLAGS) -I$(INC_DIR) -c $< -o $@
