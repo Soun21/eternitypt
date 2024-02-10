@@ -17,7 +17,7 @@ void Puzzle::generatePuzzle(){
     int N, W, S, E;
     PuzzlePiece *piece;
     cout << "Génération du puzzle" << endl;
-    srand(time(0));
+    srand(2);
     for(int i = 0; i < this->dimension; i++){ //ligne
         for(int j = 0; j < this->dimension; j++){ //colonne
             if(i%2 == 0 && j%2 == 0){
@@ -170,7 +170,6 @@ void Puzzle::generatePuzzle(){
                 puzzleFill(i);
             }
         }
-
     }
 }
 
@@ -181,7 +180,7 @@ void Puzzle::puzzleFill(int i){
     PuzzlePiece leftPiece;
     PuzzlePiece upPiece;
     PuzzlePiece rightPiece;
-    PuzzlePiece downPiece;
+    PuzzlePiece downPiece;    
     //Coin haut droit
     if(i == this->dimension-1){
         // cout << "Coin haut droit" << endl;
@@ -252,7 +251,7 @@ void Puzzle::puzzleFill(int i){
         upPiece = this->board->at(i-this->dimension);
         rightPiece = this->board->at(i+1);
         leftPiece = this->board->at(i-1);
-        downPiece = this->board->at(1+this->dimension);
+        downPiece = this->board->at(i+this->dimension);
         index.setN(upPiece.getS());
         index.setW(leftPiece.getE());
         index.setE(rightPiece.getW());
@@ -262,7 +261,7 @@ void Puzzle::puzzleFill(int i){
     W = index.getW();
     S = index.getS();
     E = index.getE();
-    // cout << "N : " << N << " W : " << W << " S : " << S << " E : " << E << endl;
+    // cout << "Index : " << i << " - " << index.toString() << endl;
     this->board->at(i) = PuzzlePiece(N, W, S, E);
 }
 
