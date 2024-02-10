@@ -17,7 +17,7 @@ void Puzzle::generatePuzzle(){
     int N, W, S, E;
     PuzzlePiece *piece;
     cout << "Génération du puzzle" << endl;
-    srand(time(0);
+    srand(time(0));
     for(int i = 0; i < this->dimension; i++){ //ligne
         for(int j = 0; j < this->dimension; j++){ //colonne
             if(i%2 == 0 && j%2 == 0){
