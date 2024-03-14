@@ -9,3 +9,5 @@ A savoir qu'il faut au moins 3 dimension et 2 motifs
 
 Ensuite pour lancer le solveur RLS :
 Il faut compiler : javac Solveur.java
+
+Note importante : pour pouvoir lancer le programme pour la génération de puzzle, il faut installer la lib SFML pour l'interface graphique.
