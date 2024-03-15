@@ -19,8 +19,7 @@ public class eternity {
 
 	public static void main(String[] args) {
 	    	
-
-		String fileName = "D:\\cours\\M2\\eternitypt-main\\eternitycplusplus\\eternity\\export\\export.txt";
+		String fileName = "./eternitypt-main/eternitycplusplus/eternity/export/export.txt";
 		// Récupération des paramètres spéciaux
 	   int[] specialParams = readSpecialParams(fileName);
 	   int param1 = specialParams[0];
@@ -28,12 +27,13 @@ public class eternity {
 
 	   // Récupération des pièces du puzzle
 	   List<PuzzlePiece> puzzlePieces = readPuzzlePieces(fileName);
-
-	 //  afficherPuzzle(puzzlePieces);
-	 //  System.out.println("Solver 1");
-	  // solvePuzzle(param1, param2, puzzlePieces);
 	   
-	  // System.out.println("Solver 2");
+	   System.out.println("Début solveur simple : ");
+	   
+	   myModel(param1, param2, puzzlePieces);
+	   
+	   System.out.println("Début solveur portfolio : ");
+	   
 	   multiSolver(param1, param2, puzzlePieces);
 
 
@@ -100,11 +100,265 @@ public class eternity {
 	        return specialParams;
 	    }
 
+   public static void myModel(int param1, int param2, List<PuzzlePiece> puzzlePieces) {
+		    int gridSize = param1;  											//taille de la grille
+		    int numPieces = gridSize * gridSize;								//nombre de pièces
+		    
+		    Model model = new Model("Model ");								//création du modèle
+
+		    IntVar[] Pi = model.intVarArray("Pi", numPieces, 1, numPieces);		//création des variables Pi
+
+		    IntVar[] Ri = model.intVarArray("Ri", numPieces, 0, 3);				//création des variables Ri
+		    
+		    //déclaration des 18 tuples
+		    
+		    //tuples horizontaux
+		    //tuples coins+bord
+		    Tuples tuplesH_CoinsHautGauche = new Tuples(true); 	
+		    Tuples tuplesH_CoinsHautDroit = new Tuples(true);
+		    Tuples tuplesH_CoinsBasGauche = new Tuples(true); 	
+		    Tuples tuplesH_CoinsBasDroit = new Tuples(true);
+
+		    //tuples bord+bord
+		    Tuples tuplesH_BordBordHaut = new Tuples(true);
+		    Tuples tuplesH_BordBordBas = new Tuples(true);
+		    
+		    //tuples bord+centre
+		    Tuples tuplesH_BordCentreGauche = new Tuples(true);
+		    Tuples tuplesH_BordCentreDroit = new Tuples(true);
+		    
+		    //tuples centre+centre
+		    Tuples tuplesH_CentreCentre = new Tuples(true);
+		    
+		    //tuples verticaux
+		    //tuples coins+bord
+		    Tuples tuplesV_CoinsHautGauche = new Tuples(true);
+		    Tuples tuplesV_CoinsHautDroit = new Tuples(true);
+		    Tuples tuplesV_CoinsBasGauche = new Tuples(true);
+		    Tuples tuplesV_CoinsBasDroit = new Tuples(true);
+		    
+		    //tuples bord+bord
+		    Tuples tuplesV_BordBordGauche = new Tuples(true);
+		    Tuples tuplesV_BordBordDroit = new Tuples(true);
+		    
+		    //tuples bord+centre
+		    Tuples tuplesV_BordCentreHaut = new Tuples(true);
+		    Tuples tuplesV_BordCentreBas = new Tuples(true);
+		    
+		    //tuples centre+centre
+		    Tuples tuplesV_CentreCentre = new Tuples(true);
+		    
+
+		          
+		    // pour toutes les cases de la grille
+		    for (int i = 1; i <= puzzlePieces.size(); i++) { 
+		        for (int j = 1; j <= puzzlePieces.size(); j++) {
+		        	if(i != j){
+
+		            	//pour toutes les orientations des pieces
+		                for (int orientation1 = 0; orientation1 < 4; orientation1++) {
+		                    for (int orientation2 = 0; orientation2 < 4; orientation2++) {
+		                    	if(isCoinHautGaucheH(puzzlePieces.get(i-1), orientation1, puzzlePieces.get(j-1), orientation2)) {
+		                    		tuplesH_CoinsHautGauche.add(i, orientation1, j, orientation2);
+		                    	}
+								if (isCoinHautDroitH(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesH_CoinsHautDroit.add(i, orientation1, j, orientation2);
+								}
+								if (isCoinBasGaucheH(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesH_CoinsBasGauche.add(i, orientation1, j, orientation2);
+								}
+								if (isCoinBasDroitH(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesH_CoinsBasDroit.add(i, orientation1, j, orientation2);
+								}
+								if (isBordHautH(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesH_BordBordHaut.add(i, orientation1, j, orientation2);
+								}
+								if (isBordBasH(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesH_BordBordBas.add(i, orientation1, j, orientation2);
+									}
+								if (isBordCentreGaucheH(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesH_BordCentreGauche.add(i, orientation1, j, orientation2);
+									}
+								if (isBordCentreDroitH(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesH_BordCentreDroit.add(i, orientation1, j, orientation2);
+									}
+								if (isCentreCentreH(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesH_CentreCentre.add(i, orientation1, j, orientation2);
+									}						
+								if (isCoinHautGaucheV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_CoinsHautGauche.add(i, orientation1, j, orientation2);
+									}
+								if (isCoinHautDroitV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_CoinsHautDroit.add(i, orientation1, j, orientation2);
+									}
+								if (isCoinBasGaucheV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_CoinsBasGauche.add(i, orientation1, j, orientation2);
+									}
+								if (isCoinBasDroitV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_CoinsBasDroit.add(i, orientation1, j, orientation2);
+									}
+								if (isBordGaucheV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_BordBordGauche.add(i, orientation1, j, orientation2);
+								}
+								if (isBordDroitV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_BordBordDroit.add(i, orientation1, j, orientation2);
+								}
+								if (isBordCentreHautV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_BordCentreHaut.add(i, orientation1, j, orientation2);
+								}
+								if (isBordCentreBasV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_BordCentreBas.add(i, orientation1, j, orientation2);
+								}
+								if (isCentreCentreV(puzzlePieces.get(i - 1), orientation1, puzzlePieces.get(j - 1), orientation2)) {
+									tuplesV_CentreCentre.add(i, orientation1, j, orientation2);
+								}
+
+		                    }
+		                } 
+		            }
+		        }
+		    }
+		    
+		    
+		   	    
+		    
+
+		    // déclaration des contraintes
+		    
+		    
+		    model.allDifferent(Pi).post();						//toutes les pièces sont différentes
+		    
+		    
+		    IntVar[] X = new IntVar[4];	//pour contenir les variables de 2 pièces
+
+		    
+		    for (int i = 0; i < puzzlePieces.size(); i++) { 	     // pour toutes les cases de la grille
+		        for (int j = 0; j < puzzlePieces.size(); j++) {		 
+		        	
+		        	if(i != j){		                        //s'assurer que les pièces sont différentes
+	            		X[0] = Pi[i];
+	            		X[1] = Ri[i];
+	            		X[2] = Pi[j];
+	            		X[3] = Ri[j];
+
+		       	        if(i==0 && j==1 ){
+		             		model.table(X, tuplesH_CoinsHautGauche,"CT+").post();			//coin haut gauche horizontal
+		       	        }
+		       	        
+						if (i == 0 && j == gridSize) {
+							model.table(X, tuplesV_CoinsHautGauche,"CT+").post();			//coin haut gauche vertical
+						}
+
+		       	        if(i==gridSize-1-1 && j==gridSize-1){
+		       	        	model.table(X, tuplesH_CoinsHautDroit,"CT+").post();			//coin haut droit horizontal
+		       	        }
+						if (i == gridSize-1 && j == gridSize+gridSize-1) {
+							model.table(X, tuplesV_CoinsHautDroit,"CT+").post();			//coin haut droit vertical
+						}
+
+						if (i == (gridSize-1)*gridSize  && j == (gridSize-1)*gridSize+1) {
+							model.table(X, tuplesH_CoinsBasGauche,"CT+").post();			//coin bas gauche horizontal
+						}
+						if (i == (gridSize-2)*gridSize && j == (gridSize-1)*gridSize) {		//coin bas gauche vertical
+							model.table(X, tuplesV_CoinsBasGauche,"CT+").post();
+						}
+
+						if (i == (gridSize*gridSize-2) && j == (gridSize*gridSize-1)) {		//coin bas droit horizontal
+							model.table(X, tuplesH_CoinsBasDroit,"CT+").post();
+						}
+						if (i == ((gridSize-1)*gridSize-1) && j == (gridSize*gridSize-1)) {	//coin bas gauche vertical
+							model.table(X, tuplesV_CoinsBasDroit,"CT+").post();
+						}
+
+						if (i > 0 && j > 0 && i < gridSize-1 &&
+								j < gridSize-1 && i < j && j == i+1) {						// bord haut horiztontal
+							model.table(X, tuplesH_BordBordHaut,"CT+").post();		
+						}
+						
+						if (i > (gridSize-1)*gridSize && j > (gridSize-1)*gridSize 
+								&& i < gridSize*gridSize-1 && j < gridSize*gridSize-1 		//bord bas horizontal 
+								&& i < j && j==i+1) {		
+							model.table(X, tuplesH_BordBordBas,"CT+").post();
+						}
+
+						if (i%gridSize == 0 && i != 0 
+								&& j != 0	&& j == i+1										// bord centre gauche horizontal
+								&& i != (gridSize-1)*gridSize
+								&& j != (gridSize-1)*gridSize) {
+							model.table(X, tuplesH_BordCentreGauche,"CT+").post();  
+						}
+
+						if(i !=gridSize-2 && j!=gridSize-1
+								&& i!=gridSize*gridSize-2 && j!=gridSize*gridSize-1			// bord centre droit horizontal
+								&& (i + 1) % gridSize == gridSize-1
+								&& j == i+1) {
+							model.table(X, tuplesH_BordCentreDroit,"CT+").post();
+						}
+
+						if (i > gridSize-1 && i < gridSize*(gridSize-1) 					// centre centre horizontal
+								&& j > gridSize-1 && j < gridSize*(gridSize-1)
+								&& j == i+1 && i%gridSize != 0 && j%gridSize != 0 
+								&& i%gridSize != gridSize-1 && j%gridSize != gridSize-1 ) {		 
+							model.table(X, tuplesH_CentreCentre,"CT+").post();
+						}
+
+						if (i%gridSize == 0 && j%gridSize == 0 && j == i+gridSize			//bord gauche vertical
+								&& i != 0 && j != 0	&& i != gridSize*(gridSize-1) 
+								&& j != gridSize*(gridSize-1) ) {			
+							model.table(X, tuplesV_BordBordGauche,"CT+").post();
+						}
+
+						if (i%gridSize == gridSize-1 && j%gridSize == gridSize-1
+								&& j == i+gridSize	&& i != gridSize-1 && j != gridSize-1	//bord droit vertical
+								&& i != gridSize*gridSize-1 && j != gridSize*gridSize-1 ) {		
+							model.table(X, tuplesV_BordBordDroit,"CT+").post();
+						}
+
+						if (i > 0 && i < gridSize-1 && j == i+gridSize) {
+							model.table(X, tuplesV_BordCentreHaut,"CT+").post();			// bord centre haut vertical
+						}
+						
+						if (j > gridSize*(gridSize-1) && j < gridSize*gridSize-1			// bord centre bas vertical
+								&& i == j-gridSize) {
+							model.table(X, tuplesV_BordCentreBas,"CT+").post();
+						}
+						
+						if (i > gridSize - 1 && i < gridSize * (gridSize - 1) 
+								&& j > gridSize - 1 && j < gridSize * (gridSize - 1) 		// centre centre vertical
+								&& j == i + gridSize && i % gridSize != 0 
+								&& j % gridSize != 0 && i % gridSize != gridSize-1 
+								&& j % gridSize != gridSize-1) { 
+							model.table(X, tuplesV_CentreCentre,"CT+").post();
+						}
+						
+		            }
+		        }
+		    }
+		    
+
+		    Solver solver = model.getSolver();
+	        
+	        int index = 0;
+	        if (solver.solve()) {
+	            // Affichage de la solution avec les couples Pi/Ri
+	            for (int i = 0; i < gridSize; i++) {
+	                for (int j = 0; j < gridSize; j++) {
+	                	index = i * gridSize + j;
+	                    System.out.print(Pi[index].getValue() + "/" + Ri[index].getValue() + " ");
+	                }
+	                System.out.println();
+	            }
+	        } else {
+	            System.out.println("Pas de solution trouvée.");
+	        }
+
+	   }
 
 	   public static void multiSolver(int param1, int param2, List<PuzzlePiece> puzzlePieces) {
 		   
 													// initialisation du nombre de solutions
-		    int nbModels = 3;													// nombre de modèles
+																// initialisation du nombre de solutions
+		    int nbModels = 20;													// nombre de modèles
 		    
 		    
 		    ParallelPortfolio portfolio = new ParallelPortfolio();				//crée un portfolio
@@ -123,37 +377,20 @@ public class eternity {
 		    System.out.println("Solving Finished!");
 		    
 		    
-	        //portfolio.streamSolutions().distinct().limit(4).forEach(s -> System.out.println(s));
-		    Solution solution = portfolio.streamSolutions().limit(1).findFirst().get();
+		    Solution solution = portfolio.streamSolutions().limit(1).findFirst().get();		//	Affichage d'une seule solition
 		    System.out.println(solution.toString());
+		    
+	        portfolio.streamSolutions().distinct().limit(6).forEach(s -> System.out.println(s)); //affichage de plusieurs solution avec un maximum de 6
+	        
+
+		    
+		    
 		    System.out.println("Time: " + (end - start)/1000 + "." + (end - start)%1000 + "s");
-		    portfolio.getModels().forEach(m -> m.getSolver().showStatistics());	//affiche les statistiques	
-	        Model finder = portfolio.getBestModel();
-	        finder.getSolver().showStatistics();
-		    //portfolio.streamSolutions().limit(1).forEach(s -> System.out.println(s));
-		     // Affichage des pièces dans leurs orientations solutions
-  
-	        
-		    //System.out.println("Number of solutions found: " + nbSols);
-	        //portfolio.getModels().forEach(m -> m.getSolver().reset());	//reset les contraintes des solveurs
-
-	        //portfolio.streamSolutions().forEach(s -> System.out.println(s));	//affiche les solutions;
-		    //portfolio.streamSolutions();
-
-		    //long totalsol = portfolio.streamSolutions().count();
-	        
-	        //System.out.println("Total solutions: " + totalsol);
-	        
-	        
-
-	        //portfolio.getModels().forEach(m -> m.getSolver().reset());	//reset les contraintes des solveurs
-	        
-	        //portfolio.getModels().forEach(m -> System.out.println(m.toString()));	//reset les contraintes des solveurs
-//	        Model finder = portfolio.getBestModel();
-//	        finder.displayPropagatorOccurrences();
-//	        System.out.println(finder.toString());
-//	        finder.getObjective();	//affiche les objectifs
-//	        finder.getSolver().showStatistics();							//affiche les statistiques
+		    
+		    portfolio.getModels().forEach(m -> { 
+		    if(m.getSolver().getSolutionCount()>0)
+		    	System.out.println(m.getSolver().getMeasures());
+		    });													//affiche les statistiques	de chaque modèle qui a une solution
 
 	
 	} 
