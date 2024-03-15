@@ -4,13 +4,20 @@
 
 
 using namespace std;
+
+// Largeur de la fenêtre
 const int WINDOW_WIDTH = 800;
+
+// Hauteur de la fenêtre
 const int WINDOW_HEIGHT = 800;
 
 //Constructeurs
 
 PuzzleDisplayer::PuzzleDisplayer(Puzzle * pRef) : p(pRef){
+    // Variable pour le puzzle
     this->p = pRef;
+
+    // On crée 22 couleurs aléatoires pour chaque motifs
     this->colors = {
         {0, 0, 0},   // Noir
         {0, 255, 0},   // Vert
@@ -41,9 +48,10 @@ PuzzleDisplayer::PuzzleDisplayer(Puzzle * pRef) : p(pRef){
 void PuzzleDisplayer::drawTriangles(sf::RenderWindow& window, sf::Vector2f center, float size,int x,int y) {
     
     
-
+    // Calcul de l'index de la pièce
     int index = y * p->getDimension() +x;
 
+    // On crée des index pour colorier chaque motifs ensuite
     int numT3 = p->getPuzzle()->at(index).getN();
     int numT2 = p->getPuzzle()->at(index).getW();
     int numT1 = p->getPuzzle()->at(index).getS();
@@ -52,7 +60,7 @@ void PuzzleDisplayer::drawTriangles(sf::RenderWindow& window, sf::Vector2f cente
 
 
 
-    // Générer des valeurs aléatoires pour les composantes RGB
+    // Générer des valeurs aléatoires pour les composantes RGB (pour colorier les motifs)
     int rT1 = std::get<0>(colors.at(numT1));
     int gT1 = std::get<1>(colors.at(numT1));
     int bT1 = std::get<2>(colors.at(numT1));
@@ -66,6 +74,8 @@ void PuzzleDisplayer::drawTriangles(sf::RenderWindow& window, sf::Vector2f cente
     int gT4 = std::get<1>(colors.at(numT4));
     int bT4 = std::get<2>(colors.at(numT4));
     
+
+    // Création des 4 triangles (un par motif de la pièce)
     sf::ConvexShape triangle,triangle2,triangle3,triangle4;
     triangle.setPointCount(3);
     triangle.setPoint(0, sf::Vector2f(0, 0));
@@ -103,10 +113,7 @@ void PuzzleDisplayer::drawTriangles(sf::RenderWindow& window, sf::Vector2f cente
     triangle4.setOutlineColor(sf::Color::Black); // Couleur du contour
 
 
-
-
-
-    // Définir la couleur aléatoire du triangle
+    // Définir la couleur aléatoire de chaque triangle
     triangle.setFillColor(sf::Color(rT1, gT1, bT1));
     triangle2.setFillColor(sf::Color(rT2, gT2, bT2));
     triangle3.setFillColor(sf::Color(rT3, gT3, bT3));
@@ -114,43 +121,46 @@ void PuzzleDisplayer::drawTriangles(sf::RenderWindow& window, sf::Vector2f cente
 
 
 
-
+    // On ajoute les triangles
     window.draw(triangle);
     window.draw(triangle2);
     window.draw(triangle3);
     window.draw(triangle4);
 
-
-    // cout << numT1 << endl;
-    // cout << x << "," << y << endl;
-    // cout << rT1 << "," << gT1 << "," << bT1 << endl;
-    // cout << rT2 << "," << gT2 << "," << bT2 << endl;
-    // cout << rT3 << "," << gT3 << "," << bT3 << endl;
-    // cout << rT4 << "," << gT4 << "," << bT4 << endl;
-    // cout << "======================" << endl;
-
-
-
 }
 
 
 void PuzzleDisplayer::drawSquare(sf::RenderWindow& window, sf::Vector2f position, float size) {
+    // On crée le carré représentant la pièce
     sf::RectangleShape square(sf::Vector2f(size, size));
+
+    // On le place
     square.setPosition(position);
+
+    // On le colorie
     square.setFillColor(sf::Color::Transparent);
+
+    // On définit l'épaissuer du contour
     square.setOutlineThickness(1.f);
+
+    // On définit la couleur du contour
     square.setOutlineColor(sf::Color::Black);
+
+    // On dessine le carré
     window.draw(square);
 }
 
 void PuzzleDisplayer::drawGrid(sf::RenderWindow& window) {
-    int gridSize = this->p->getDimension(); // Récupérer la taille de la grille depuis Puzzle
+    // On récupére la taille de la grille depuis Puzzle
+    int gridSize = this->p->getDimension(); 
 
+    // On définit la taille des carrés (pièce de puzzle) et des triangles (motifs)
     const float squareSize = WINDOW_WIDTH / float(gridSize);
     const float triangleSize = squareSize / 2.f;
 
     for (int y = 0; y < gridSize; ++y) {
         for (int x = 0; x < gridSize; ++x) {
+            // Pour chaque pièce on crée un carré et 4 triangles
             sf::Vector2f position(x * squareSize, y * squareSize);
             drawSquare(window, position, squareSize);
             sf::Vector2f center(position.x + squareSize / 2, position.y + squareSize / 2);
@@ -162,16 +172,23 @@ void PuzzleDisplayer::drawGrid(sf::RenderWindow& window) {
 
 void PuzzleDisplayer::display() {
 
+    // Création de la fenêtre de rendu
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Eternity II");
 
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
+                // Création d'un évènement de fermeture
                 window.close();
         }
+        // On vide la fenêtre
         window.clear(sf::Color::White);
-        drawGrid(window); // Utiliser la fonction modifiée drawGrid() avec la taille de grille dynamique
+
+        // On dessine la grille dans la fenêtre
+        drawGrid(window);
+
+        // On affiche la fenêtre
         window.display();
     }
 
