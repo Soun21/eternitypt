@@ -19,7 +19,7 @@ Sous Linux :
 ./eternity [dimension] [nbMotifs]
 ```
 
-# Solveur CHOCO
+# Solveur RLS
 ## Compilation
 Placez vous dans le dossier `eternitypt-main/SolveurRLS/` et exécutez le code suivant :
 ```bash
